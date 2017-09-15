@@ -47,6 +47,4 @@ server/config.js
 silent.html
 src/app/auth/auth.config.ts
 /server/config.js
-src/app/footer/
-src/app/header/
-src/app/pages/
+
