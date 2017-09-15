@@ -32,6 +32,7 @@
 npm-debug.log
 testem.log
 /typings
+yarn-error.log
 
 # e2e
 /e2e/*.js
@@ -40,3 +41,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Config files
+server/config.js
+silent.html
+src/app/auth/auth.config.ts
