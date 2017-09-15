@@ -4,6 +4,12 @@
     <h1 class="header-page-siteTitle">
       <a routerLink="/">Todo list</a>
     </h1>
+    <div class="header-page-authStatus">
+      <a *ngIf="!auth.loggedIn" (click)="auth.login()">Log In</a>
+      <span *ngIf="auth.loggedIn">
+        {{auth.userProfile?.name}} <span class="opacity-half">|</span> <a (click)="auth.logout()">Log Out</a>
+      </span>
+    </div>
   </div>
 
   <nav id="nav" class="nav" role="navigation">
