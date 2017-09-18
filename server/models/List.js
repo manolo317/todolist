@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 
 const listSchema = new Schema({
     title: { type: String, required: true },
-    Datetime: { type: Date, required: true },
+    datetime: { type: Date, required: true },
     viewPublic: { type: Boolean, required: true },
     description: String,
 });

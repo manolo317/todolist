@@ -1,0 +1,52 @@
+<div class="card-block">
+  <h2 class="card-title text-center">TODO</h2>
+  <app-loading *ngIf="loading"></app-loading>
+</div>
+
+<ng-template [ngIf]="utils.isLoaded(loading)">
+
+  <!--<ng-template [ngIf]="todos">-->
+
+    <!--&lt;!&ndash; No RSVP yet &ndash;&gt;-->
+    <!--<div *ngIf="!userRsvp" class="card-block">-->
+      <!--<p class="lead">Fill out the form below to respond:</p>-->
+      <!--&lt;!&ndash; @TODO: RSVP form (add new RSVP) will go here &ndash;&gt;-->
+    <!--</div>-->
+  <!--</ng-template>-->
+
+  <!-- All RSVPs -->
+
+  <section class="allRsvps">
+    <div class="card-block">
+      <h3 class="card-title text-center">All TODOs</h3>
+      <p *ngIf="!todos.length" class="lead">There are currently no TODOs for this list.</p>
+    </div>
+
+    <ul *ngIf="todos.length" class="list-group list-group-flush">
+      <li class="list-group-item list-group-item-success justify-content-between">
+        <!--<strong>Attending</strong>-->
+        <!--<span class="badge badge-success badge-pill">{{totalAttending}}</span>-->
+      </li>
+      <li
+              *ngFor="let todo of todos"
+              class="list-group-item small">
+        {{todo.title}}
+        <p *ngIf="auth.isAdmin && todo.comments" class="d-flex w-100">
+          <em [innerHTML]="todo.comments"></em>
+        </p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Error loading RSVPs -->
+  <div *ngIf="error" class="card-block">
+    <p class="alert alert-danger">
+      <strong>Oops!</strong> There was an error retrieving TODOs for this list.
+    </p>
+  </div>
+</ng-template>
+
+<!-- Footer showing # of total attending guests -->
+<!--<div class="card-footer text-right">-->
+  <!--<small *ngIf="totalAttending >= 0" class="text-muted">{{utils.displayCount(totalAttending)}} {{footerTense}}</small>-->
+<!--</div>-->

@@ -1,0 +1,18 @@
+<div class="card-block">
+  <h2 class="card-title text-center">List Details</h2>
+</div>
+
+<ul class="list-group list-group-flush">
+  <li class="list-group-item">
+    <strong>Created:</strong>{{utils.listDate(list.datetime)}}
+  </li>
+</ul>
+
+<p
+        *ngIf="list.description"
+        class="card-block lead"
+        [innerHTML]="list.description"></p>
+
+<!--<div *ngIf="auth.isAdmin" class="card-footer text-right small">-->
+  <!--<a [routerLink]="['/admin/list/update', list._id]">Edit</a>-->
+<!--</div>-->

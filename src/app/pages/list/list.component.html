@@ -1,0 +1,26 @@
+<app-loading *ngIf="loading"></app-loading>
+
+<ng-template [ngIf]="utils.isLoaded(loading)">
+  <h1 class="text-center">{{pageTitle}}</h1>
+  <!-- Event -->
+  <ng-template [ngIf]="list">
+
+    <div class="card">
+
+      <div class="card-header">
+        <!-- List detail tab -->
+        <app-list-detail
+                [list]="list"></app-list-detail>
+
+        <!-- List RSVP content -->
+        <app-todo
+                [listId]="list._id"></app-todo>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Error loading events -->
+  <p *ngIf="error" class="alert alert-danger">
+    <strong>Oops!</strong> There was an error retrieving information for this list.
+  </p>
+</ng-template>
