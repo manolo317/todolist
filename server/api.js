@@ -93,9 +93,85 @@ module.exports = function(app, config) {
         });
     });
 
-    // POST a new Todo
+    // POST a new event
+    app.post('/api/list/new', jwtCheck, adminCheck, (req, res) => {
+        List.findOne({
+            title: req.body.title,
+            datetime: req.body.datetime,
+            viewPublic: req.body.viewPublic,
+            description: req.body.description}, (err, existingList) => {
+            if (err) {
+                return res.status(500).send({message: err.message});
+            }
+            if (existingList) {
+                return res.status(409).send({message: 'You have already created a list with this title, location, and start date/time.'});
+            }
+            const list = new List({
+                title: req.body.title,
+                datetime: req.body.datetime,
+                viewPublic: req.body.viewPublic,
+                description: req.body.description
+            });
+            list.save((err) => {
+                if (err) {
+                    return res.status(500).send({message: err.message});
+                }
+                res.send(list);
+            });
+        });
+    });
+
+    // PUT (edit) an existing list
+    app.put('/api/list/:id', jwtCheck, adminCheck, (req, res) => {
+        List.findById(req.params.id, (err, list) => {
+            if (err) {
+                return res.status(500).send({message: err.message});
+            }
+            if (!list) {
+                return res.status(400).send({message: 'List not found.'});
+            }
+            list.title = req.body.title,
+            list.datetime = req.body.datetime,
+            list.viewPublic = req.body.viewPublic,
+            list.description = req.body.description
+
+            list.save(err => {
+                if (err) {
+                    return res.status(500).send({message: err.message});
+                }
+                res.send(list);
+            });
+        });
+    });
+
+    // DELETE a list and all associated TODOsElement
+    app.delete('/api/list/:id', jwtCheck, adminCheck, (req, res) => {
+        List.findById(req.params.id, (err, list) => {
+            if (err) {
+                return res.status(500).send({message: err.message});
+            }
+            if (!list) {
+                return res.status(400).send({message: 'List not found.'});
+            }
+            Todo.find({listId: req.params.id}, (err, todos) => {
+                if (todos) {
+                    todos.forEach(todo => {
+                        todo.remove();
+                    });
+                }
+                list.remove(err => {
+                    if (err) {
+                        return res.status(500).send({message: err.message});
+                    }
+                    res.status(200).send({message: 'List and TODOs successfully deleted.'});
+                });
+            });
+        });
+    });
+
+    // POST a new TodoModel
     app.post('/api/todo/new', jwtCheck, (req, res) => {
-        Todo.findOne({listId: req.body.listId, userId: req.body.userId}, (err, existingTodo) => {
+        Todo.findOne({title: req.body.title}, (err, existingTodo) => {
             if (err) {
                 return res.status(500).send({message: err.message});
             }
@@ -140,6 +216,20 @@ module.exports = function(app, config) {
                 }
                 res.send(todo);
             });
+        });
+    });
+
+    // DELETE a todoElement
+    app.delete('/api/todo/:id', jwtCheck, adminCheck, (req, res) => {
+        Todo.findById(req.params.id, (err, todo) => {
+            if (err) {
+                return res.status(500).send({message: err.message});
+            }
+            if (!todo) {
+                return res.status(400).send({message: 'Todo not found.'});
+            }
+            todo.remove();
+            res.status(200).send({message: 'TODO successfully deleted.'});
         });
     });
 

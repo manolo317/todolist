@@ -34,9 +34,17 @@
         <p *ngIf="auth.isAdmin && todo.comments" class="d-flex w-100">
           <em [innerHTML]="todo.comments"></em>
         </p>
+        <button class="delete"
+                (click)="deleteTodo(todo);">x</button>
       </li>
     </ul>
   </section>
+  <div>
+    <label>Todo title:</label> <input #title />
+    <button (click)="addTodo(title.value); title.value=''">
+      Add
+    </button>
+  </div>
 
   <!-- Error loading RSVPs -->
   <div *ngIf="error" class="card-block">

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AuthService } from './../../../auth/auth.service';
 import { ApiService } from './../../../core/api.service';
 import { UtilsService } from './../../../core/utils.service';
@@ -14,11 +14,14 @@ import { Subscription } from 'rxjs/Subscription';
 export class TodoComponent implements OnInit, OnDestroy {
   @Input() listId: string;
   @Input() listPast: boolean;
+  @Output() submitTodo = new EventEmitter()
   todosSub: Subscription;
+  deleteSub: Subscription;
   todos: TodoModel[];
   loading: boolean;
   error: boolean;
-  userTodo: TodoModel;
+  todo: TodoModel;
+  isEdit: boolean;
   totalTodos: number;
   showAllTodos = false;
   showTodosText = 'View All TODOs';
@@ -31,6 +34,7 @@ export class TodoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._getTODOs();
+    this.isEdit = !!this.todo;
   }
 
   private _getTODOs() {
@@ -41,7 +45,6 @@ export class TodoComponent implements OnInit, OnDestroy {
         .subscribe(
             res => {
               this.todos = res;
-              this._updateTodoState();
               this.loading = false;
             },
             err => {
@@ -52,33 +55,63 @@ export class TodoComponent implements OnInit, OnDestroy {
         );
   }
 
-  private _updateTodoState() {
-    // @TODO: We will add more functionality here later
-    this._setUserTodoGetAttending();
+  addTodo(title: string): void {
+    this.todo = new TodoModel(
+        this.auth.userProfile.sub,
+        title.trim(),
+        this.listId,
+        false,
+        null
+    );
+    if(!title) { return; }
+    this.api.postTodo$(this.todo)
+        .subscribe(
+            data => this._handleSubmitSuccess(data),
+            err => this._handleSubmitError(err)
+        )
   }
 
-  private _setUserTodoGetAttending() {
-    // Iterate over TODOs to get/set user's todos
-    // and get total number of attending guests
-    let todos = 0;
-    const todoArr = this.todos.map(todo => {
-      // If user has an existing RSVP
-      if (todo.userId === this.auth.userProfile.sub) {
-        this.userTodo = todo;
-      }
-      // Count total number of attendees
-      // + additional guests
-      if (todo) {
-        todos++;
-      }
-      return todo;
-    });
-    this.todos = todoArr;
-    this.totalTodos = todos;
+  deleteTodo(todo: TodoModel) {
+    console.log(todo);
+    this.deleteSub = this.api
+        .deleteTodo$(todo._id)
+        .subscribe(
+            res => {
+              this.error = false;
+              this.todos = this.todos.filter(t => t !== todo);
+              console.log(res.message);
+            },
+            err => {
+              console.log(err);
+              this.error = true;
+            }
+        );
   }
+
+  private _handleSubmitSuccess(res) {
+    const eventObj = {
+      isEdit: this.isEdit,
+      todo: res
+    };
+    this.submitTodo.emit(eventObj);
+    this.todos.push(this.todo);
+    this.error = false;
+  }
+
+  private _handleSubmitError(err) {
+    const eventObj = {
+      isEdit: this.isEdit,
+      error: err
+    };
+    this.submitTodo.emit(eventObj);
+    console.error(err);
+    this.error = true;
+  }
+
 
   ngOnDestroy() {
     this.todosSub.unsubscribe();
+    this.deleteSub.unsubscribe();
   }
 
 }
