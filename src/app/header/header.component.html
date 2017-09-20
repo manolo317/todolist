@@ -20,6 +20,12 @@
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }">Todo</a>
       </li>
+      <li>
+        <a
+                *ngIf="auth.loggedIn && auth.isAdmin"
+                routerLink="/list/new"
+                routerLinkActive="active">Create list</a>
+      </li>
     </ul>
   </nav>
 </header>

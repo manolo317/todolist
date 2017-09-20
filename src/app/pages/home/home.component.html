@@ -2,6 +2,15 @@
 <app-loading *ngIf="loading"></app-loading>
 
 <ng-template [ngIf]="utils.isLoaded(loading)">
+
+    <!--<p class="lead">Welcome, {{auth.userProfile?.name}}! You can create and administer lists below.</p>-->
+
+    <p>
+        <a
+            class="btn btn-success btn-block"
+            routerLink="/list/new">+ Create New List</a>
+    </p>
+
     <ng-template [ngIf]="listList">
         <ng-template [ngIf]="listList.length">
 
@@ -29,15 +38,33 @@
 
             <!-- Events listing -->
             <section class="list-group">
-                <a
-                        *ngFor="let list of listList"
-                        [routerLink]="['/list', list._id]"
-                        class="list-group-item list-group-item-action flex-column align-items-start">
+                <div
+                    *ngFor="let list of listList"
+                    class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1" [innerHTML]="list.title"></h5>
-                        <small>{{utils.listDate(list.datetime)}}</small>
+                        <a [routerLink]="['/list', list._id]">
+                            <h5 class="mb-1" [innerHTML]="list.title"></h5>
+                        </a>
+                        <div class="event-icons">
+                            <img
+                                    *ngIf="!list.viewPublic"
+                                    class="event-icon"
+                                    title="Private"
+                                    src="/assets/images/eye.svg">
+                        </div>
+                        <p class="mb-1">
+                            <strong>Date:</strong>{{utils.listDate(list.datetime)}}</p>
                     </div>
-                </a>
+                    <p class="mb-1">
+                        <a
+                            class="btn btn-info btn-sm"
+                            [routerLink]="['/list/update', list._id]">Edit</a>
+                        <a
+                            class="btn btn-danger btn-sm"
+                            [routerLink]="['/list/update', list._id]"
+                            [queryParams]="{tab: 'delete'}">Delete</a>
+                    </p>
+                </div>
             </section>
         </ng-template>
 

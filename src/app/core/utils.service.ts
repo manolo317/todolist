@@ -10,6 +10,11 @@ export class UtilsService {
     return loading === false;
   }
 
+  tabIs(currentTab: string, tab: string): boolean {
+    // Check if current tab is tab name
+    return currentTab === tab;
+  }
+
   listDate(date): string {
     // Display single-day events as "Jan 7, 2018"
     // Display multi-day events as "Aug 12, 2017 - Aug 13, 2017"

@@ -1,7 +1,7 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -20,6 +20,10 @@ import { ListDetailComponent } from './pages/list/list-detail/list-detail.compon
 import { TodoComponent } from './pages/list/todo/todo.component';
 import { TodoFormComponent } from './pages/list/todo/todo-form/todo-form.component';
 import { SubmittingComponent } from './core/forms/submitting.component';
+import { CreateListComponent } from './pages/admin/create-list/create-list.component';
+import { UpdateListComponent } from './pages/admin/update-list/update-list.component';
+import { ListFormComponent } from './pages/admin/list-form/list-form.component';
+import { DeleteListComponent } from './pages/admin/update-list/delete-list/delete-list.component';
 
 
 @NgModule({
@@ -34,13 +38,18 @@ import { SubmittingComponent } from './core/forms/submitting.component';
     ListDetailComponent,
     TodoComponent,
     TodoFormComponent,
-    SubmittingComponent
+    SubmittingComponent,
+    CreateListComponent,
+    UpdateListComponent,
+    ListFormComponent,
+    DeleteListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     Title,

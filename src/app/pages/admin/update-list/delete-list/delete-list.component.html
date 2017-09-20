@@ -1,0 +1,31 @@
+<p class="lead">
+  You are deleting the "<strong [innerHTML]="list.title"></strong>" list.
+</p>
+
+<p class="text-danger">
+  Deleting this list will also remove all associated TODOs. Please proceed with caution!
+</p>
+
+<div class="form-group">
+  <label for="deleteList">Confirm list title:</label>
+  <input
+          type="text"
+          id="deleteList"
+          class="form-control"
+          name="deleteList"
+          [(ngModel)]="confirmDelete">
+</div>
+
+<!-- Delete button -->
+<p>
+  <button
+          class="btn btn-danger"
+          (click)="removeList()"
+          [disabled]="confirmDelete !== list.title || submitting">Delete List</button>
+  <app-submitting *ngIf="submitting"></app-submitting>
+</p>
+
+<!-- Error deleting list -->
+<p *ngIf="error" class="alert alert-danger">
+  <strong>Oops!</strong> There was an error deleting this list. Please try again.
+</p>

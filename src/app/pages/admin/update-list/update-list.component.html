@@ -1,0 +1,43 @@
+<h1 class="text-center">{{pageTitle}}</h1>
+
+<app-loading *ngIf="loading"></app-loading>
+
+<ng-template [ngIf]="utils.isLoaded(loading)">
+  <div *ngIf="list" class="card">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a
+                  class="nav-link"
+                  [routerLink]="[]"
+                  [queryParams]="{tab: 'edit'}"
+                  [ngClass]="{'active': utils.tabIs(tab, 'edit')}">Edit</a>
+        </li>
+        <li class="nav-item">
+          <a
+                  class="nav-link"
+                  [routerLink]="[]"
+                  [queryParams]="{tab: 'delete'}"
+                  [ngClass]="{'active': utils.tabIs(tab, 'delete')}">Delete</a>
+        </li>
+      </ul>
+    </div>
+    <div class="card-block">
+      <!-- Edit list form -->
+      <app-list-form
+              *ngIf="utils.tabIs(tab, 'edit')"
+              [list]="list"></app-list-form>
+
+      <!-- Delete list -->
+      <app-delete-list
+              *ngIf="utils.tabIs(tab, 'delete')"
+              [list]="list"></app-delete-list>
+    </div>
+
+  </div>
+
+  <!-- Error loading list -->
+  <p *ngIf="error" class="alert alert-danger">
+    <strong>Error:</strong> List data could not be retrieved. View <a routerLink="/" class="alert-link">View Lists</a>.
+  </p>
+</ng-template>
