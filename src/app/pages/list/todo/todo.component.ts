@@ -16,15 +16,14 @@ export class TodoComponent implements OnInit, OnDestroy {
   @Input() listPast: boolean;
   @Output() submitTodo = new EventEmitter()
   todosSub: Subscription;
+  addSub: Subscription;
   deleteSub: Subscription;
+  updateSub: Subscription;
   todos: TodoModel[];
   loading: boolean;
   error: boolean;
   todo: TodoModel;
   isEdit: boolean;
-  totalTodos: number;
-  showAllTodos = false;
-  showTodosText = 'View All TODOs';
 
   constructor(
       public auth: AuthService,
@@ -56,6 +55,7 @@ export class TodoComponent implements OnInit, OnDestroy {
   }
 
   addTodo(title: string): void {
+    console.log(title);
     this.todo = new TodoModel(
         this.auth.userProfile.sub,
         title.trim(),
@@ -64,7 +64,8 @@ export class TodoComponent implements OnInit, OnDestroy {
         null
     );
     if(!title) { return; }
-    this.api.postTodo$(this.todo)
+    this.addSub = this.api
+        .postTodo$(this.todo)
         .subscribe(
             data => this._handleSubmitSuccess(data),
             err => this._handleSubmitError(err)
@@ -72,7 +73,7 @@ export class TodoComponent implements OnInit, OnDestroy {
   }
 
   deleteTodo(todo: TodoModel) {
-    console.log(todo);
+    console.log(todo._id);
     this.deleteSub = this.api
         .deleteTodo$(todo._id)
         .subscribe(
@@ -87,14 +88,49 @@ export class TodoComponent implements OnInit, OnDestroy {
             }
         );
   }
+  onEnterComment(todo: TodoModel, comment: string) {
+    console.log(todo, comment);
+    todo.comments = comment;
+    this.updateSub = this.api
+        .editTodo$(todo._id, todo)
+        .subscribe(
+            res => {
+              this.error = false;
+              console.log(res);
+            },
+            err => {
+              console.log(err);
+              this.error = true;
+            }
+        );
+  }
+
+  onCheck(todo: TodoModel, e) {
+    console.log(todo, e.target.checked);
+    todo.done = e.target.checked;
+    this.updateSub = this.api
+        .editTodo$(todo._id, todo)
+        .subscribe(
+            res => {
+              this.error = false;
+              console.log(res);
+            },
+            err => {
+              console.log(err);
+              this.error = true;
+            }
+        );
+  }
 
   private _handleSubmitSuccess(res) {
     const eventObj = {
       isEdit: this.isEdit,
       todo: res
     };
+    console.log(res);
     this.submitTodo.emit(eventObj);
-    this.todos.push(this.todo);
+    this.todos.push(eventObj.todo);
+    console.log(this.todos);
     this.error = false;
   }
 
@@ -111,7 +147,14 @@ export class TodoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.todosSub.unsubscribe();
-    this.deleteSub.unsubscribe();
+    if (this.deleteSub) {
+        this.deleteSub.unsubscribe();
+    }
+    if (this.addSub) {
+        this.addSub.unsubscribe();
+    }
+    if (this.updateSub) {
+        this.updateSub.unsubscribe();
+    }
   }
-
 }

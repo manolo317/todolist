@@ -18,30 +18,29 @@
 
   <section class="allRsvps">
     <div class="card-block">
-      <h3 class="card-title text-center">All TODOs</h3>
       <p *ngIf="!todos.length" class="lead">There are currently no TODOs for this list.</p>
+      <p *ngIf="todos.length" class="lead">There are currently {{utils.displayCount(todos.length)}} for this list.</p>
     </div>
 
-    <ul *ngIf="todos.length" class="list-group list-group-flush">
-      <li class="list-group-item list-group-item-success justify-content-between">
-        <!--<strong>Attending</strong>-->
-        <!--<span class="badge badge-success badge-pill">{{totalAttending}}</span>-->
-      </li>
-      <li
-              *ngFor="let todo of todos"
-              class="list-group-item small">
-        {{todo.title}}
-        <p *ngIf="auth.isAdmin && todo.comments" class="d-flex w-100">
-          <em [innerHTML]="todo.comments"></em>
-        </p>
-        <button class="delete"
-                (click)="deleteTodo(todo);">x</button>
+    <ul *ngFor="let todo of todos" class="list-group list-group-flush todos">
+      <li class="list-group-item small">
+        <div class="block">
+          <span class="badge"><input type="checkbox" [checked]="todo.done" (change)="onCheck(todo, $event);"></span>
+          <span>{{todo.title}}<button class="delete" (click)="deleteTodo(todo);">x</button></span>
+        </div>
+        <div class="block">
+          <h4>Comment</h4>
+          <input #comment (keyup.enter)="onEnterComment(todo, comment.value);"  value="{{todo.comments}}">
+        </div>
       </li>
     </ul>
   </section>
   <div>
-    <label>Todo title:</label> <input #title />
-    <button (click)="addTodo(title.value); title.value=''">
+    <label>New todo:</label>
+    <input #newTodo
+           (keyup.enter)="addTodo(newTodo.value); newTodo.value=''"
+           (blur)="addTodo(newTodo.value); newTodo.value=''"/>
+    <button (click)="addTodo(newTodo.value); newTodo.value=''">
       Add
     </button>
   </div>

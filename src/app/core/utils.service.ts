@@ -32,30 +32,11 @@ export class UtilsService {
     }
   }
 
-  eventPast(eventEnd): boolean {
-    // Check if event has already ended
-    const now = new Date();
-    const then = new Date(eventEnd.toString());
-    return now >= then;
-  }
-
-  tabIs(currentTab: string, tab: string): boolean {
-    // Check if current tab is tab name
-    return currentTab === tab;
-  }
-
-  displayCount(guests: number): string {
+  displayCount(todosCount: number): string {
     // Example usage:
-    // {{displayCount(guests)}} attending this event
-    const persons = guests === 1 ? ' person' : ' people';
-    return guests + persons;
-  }
-
-  showPlusOnes(guests: number): string {
-    // If bringing additional guest(s), show as "+n"
-    if (guests) {
-      return `+${guests}`;
-    }
+    // {{displayCount(todosCount)}} attending this list
+    const tasks = todosCount === 1 ? ' task' : ' tasks';
+    return todosCount + tasks;
   }
 
   booleanToText(bool: boolean): string {
