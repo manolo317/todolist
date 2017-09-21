@@ -189,12 +189,14 @@ module.exports = function(app, config) {
                 if (err) {
                     return res.status(500).send({message: err.message});
                 }
-                res.send(todo);
+                res.send({
+                    todo: todo,
+                    message: 'TODO successfully created.'});
             });
         });
     });
 
-    // PUT (edit) an existing RSVP
+    // PUT (edit) an existing TODOElement
     app.put('/api/todo/:id', jwtCheck, (req, res) => {
         Todo.findById(req.params.id, (err, todo) => {
             if (err) {
@@ -214,7 +216,9 @@ module.exports = function(app, config) {
                 if (err) {
                     return res.status(500).send({message: err.message});
                 }
-                res.send(todo);
+                res.send({
+                    todo: todo,
+                    message: 'TODO successfully edited.'});
             });
         });
     });
@@ -229,7 +233,9 @@ module.exports = function(app, config) {
                 return res.status(400).send({message: 'Todo not found.'});
             }
             todo.remove();
-            res.status(200).send({message: 'TODO successfully deleted.'});
+            res.status(200).send({
+                todo: todo,
+                message: 'TODO successfully deleted.'});
         });
     });
 

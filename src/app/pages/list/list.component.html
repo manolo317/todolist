@@ -12,9 +12,10 @@
         <app-list-detail
                 [list]="list"></app-list-detail>
 
-        <!-- List RSVP content -->
+        <!-- List TodoElement content -->
         <app-todo
-                [listId]="list._id"></app-todo>
+                [listId]="list._id"
+                (submitTodo)="onSubmitTodo($event)"></app-todo>
       </div>
     </div>
   </ng-template>

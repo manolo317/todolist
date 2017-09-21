@@ -18,7 +18,7 @@ export class UtilsService {
   listDate(date): string {
     // Display single-day events as "Jan 7, 2018"
     // Display multi-day events as "Aug 12, 2017 - Aug 13, 2017"
-    return this.datePipe.transform(date, 'mediumDate');
+    return this.datePipe.transform(date, 'medium');
 
   }
 
