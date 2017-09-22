@@ -1,49 +1,55 @@
 <div class="card-block">
-  <h2 class="card-title text-center">TODO</h2>
   <app-loading *ngIf="loading"></app-loading>
 </div>
 
 <ng-template [ngIf]="utils.isLoaded(loading)">
 
-  <!--<ng-template [ngIf]="todos">-->
-
-    <!--&lt;!&ndash; No RSVP yet &ndash;&gt;-->
-    <!--<div *ngIf="!userRsvp" class="card-block">-->
-      <!--<p class="lead">Fill out the form below to respond:</p>-->
-      <!--&lt;!&ndash; @TODO: RSVP form (add new RSVP) will go here &ndash;&gt;-->
-    <!--</div>-->
-  <!--</ng-template>-->
-
-  <!-- All RSVPs -->
-
-  <section class="allRsvps">
+  <section class="list-group">
     <div class="card-block">
       <p *ngIf="!todos.length" class="lead">There are currently no TODOs for this list.</p>
       <p *ngIf="todos.length" class="lead">There are currently {{utils.displayCount(todos.length)}} for this list.</p>
     </div>
+    <div class="card-block">
+      <div class="form-inline text-center">
+        <label class="mr-sm-2" for="newTodo">New todo:</label>
+        <input #newTodo
+               class="form-control"
+               id="newTodo"
+               (keyup.enter)="addTodo(newTodo.value); newTodo.value=''"
+               (blur)="addTodo(newTodo.value); newTodo.value=''"/>
+        <button class="btn btn-success btn-md mr-sm-2"
+                (click)="addTodo(newTodo.value); newTodo.value=''">
+          Add
+        </button>
+      </div>
+    </div>
 
-    <ul *ngFor="let todo of todos" class="list-group list-group-flush todos">
-      <li class="list-group-item small">
-        <div class="block">
-          <span class="badge"><input type="checkbox" [checked]="todo.done" (change)="onCheck(todo, $event);"></span>
-          <span>{{todo.title}}<button class="delete" (click)="deleteTodo(todo);">x</button></span>
-        </div>
-        <div class="block">
-          <h4>Comment</h4>
-          <input #comment (keyup.enter)="onEnterComment(todo, comment.value);"  value="{{todo.comments}}">
-        </div>
-      </li>
-    </ul>
+    <div *ngFor="let todo of todos" class="list-group-item list-group-item-action flex-column align-items-start">
+      <div class="d-flex w-100 justify-content-between">
+         <div class="checkbox">
+           <label style="font-size: 2em">
+             <input type="checkbox" [checked]="todo.done" (change)="onCheck(todo, $event);">
+             <span class="cr" title="check"><i class="cr-icon fa fa-check"></i></span>
+             {{todo.title}}
+           </label>
+         </div>
+        <button class="btn btn-danger btn-md"
+                (click)="deleteTodo(todo);"
+                title="delete"><i class="cr-icon fa fa-trash"></i></button>
+      </div>
+      <div>
+        <label class="mr-sm-2" for="comment"><strong>comment:</strong></label>
+          <input #comment
+                 id="comment"
+                 class="form-control"
+                 (keyup.enter)="onEnterComment(todo, comment.value);"  value="{{todo.comments}}"
+                 (blur)="onEnterComment(todo, comment.value);"  value="{{todo.comments}}">
+      </div>
+      <!--<p *ngIf="utils.validURL(todo.comments)">-->
+        <!--<a href="{{todo.comments}}">link</a>-->
+      <!--</p>-->
+    </div>
   </section>
-  <div>
-    <label>New todo:</label>
-    <input #newTodo
-           (keyup.enter)="addTodo(newTodo.value); newTodo.value=''"
-           (blur)="addTodo(newTodo.value); newTodo.value=''"/>
-    <button (click)="addTodo(newTodo.value); newTodo.value=''">
-      Add
-    </button>
-  </div>
 
   <!-- Error loading RSVPs -->
   <div *ngIf="error" class="card-block">

@@ -39,7 +39,7 @@
             <!-- Events listing -->
             <section class="list-group">
                 <div
-                    *ngFor="let list of listList"
+                    *ngFor="let list of filteredLists"
                     class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <a [routerLink]="['/list', list._id]">
@@ -53,7 +53,7 @@
                                     src="/assets/images/eye.svg">
                         </div>
                         <p class="mb-1">
-                            <strong>Date:</strong>{{utils.listDate(list.datetime)}}</p>
+                            <strong>Last update:</strong> {{utils.listDate(list.datetime)}}</p>
                     </div>
                     <p class="mb-1">
                         <a

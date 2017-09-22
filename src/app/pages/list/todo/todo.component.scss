@@ -1,26 +1,43 @@
-.block {
-  display: block;
+.checkbox label:after {
+  content: '';
+  display: table;
   clear: both;
 }
 
-button {
-  font-family: Arial;
-  background-color: #eee;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  cursor: hand;
+.checkbox .cr {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #a9a9a9;
+  border-radius: .25em;
+  width: 1.3em;
+  height: 1.3em;
+  float: left;
+  margin-right: .5em;
+}
 
-  &:hover {
-    background-color: #cfd8dc;
-  }
+.checkbox .cr .cr-icon {
+  position: absolute;
+  font-size: .8em;
+  line-height: 0;
+  top: 50%;
+  left: 20%;
+}
 
-  &.delete {
-    float:right;
-    margin-top: 2px;
-    margin-right: .8em;
-    background-color: gray !important;
-    color:white;
-  }
+.checkbox label input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox label input[type="checkbox"] + .cr > .cr-icon {
+  transform: scale(3) rotateZ(-20deg);
+  opacity: 0;
+  transition: all .3s ease-in;
+}
+
+.checkbox label input[type="checkbox"]:checked + .cr > .cr-icon {
+  transform: scale(1) rotateZ(0deg);
+  opacity: 1;
+}
+
+.checkbox label input[type="checkbox"]:disabled + .cr {
+  opacity: .5;
 }
